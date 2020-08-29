@@ -1,6 +1,32 @@
-<div align="center" id="mandelbrotDiv"></div>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Фракталы и их глубины</title>
+    <link rel="stylesheet" href="/style.css">
+  </head>
 
-<script src="index.js"></script>
-<noscript>
-  <div>Извините, требуется включённый Javascript для работы приложения!</div>
-</noscript>
+  <body>
+    <div id="control_panel">
+      <div id="old_properties">
+        <div id="old_x"></div>
+        <div id="old_y"></div>
+        <div id="old_i"></div>
+        <div id="old_s"></div>
+      </div>
+      <div id="new_properties">
+        <input id="input_x">
+        <input id="input_y">
+        <input id="input_i">
+        <input id="input_s">
+      </div>
+      <div id="control_buttons">
+        <button onclick="updateCanvas()">Перерасчитать</button>
+        <button onclick="downloadCanvas()">Скачать</button>
+      </div>
+    </div>
+    
+    <div id="drawing_space"></div>
+
+    <script src="/index.js"></script>
+  </body>
+</html>
