@@ -93,7 +93,8 @@ const fillOlds = (old_x, old_y, old_i, old_s) => {
 }
 
 const getCanvas = () => {
-  return canvas = document.getElementById('drawing_space').firstChild
+  const canvas = document.getElementById('drawing_space').firstChild
+  return canvas
 }
 
 const createCanvas = () => {
@@ -196,6 +197,11 @@ const start = () => {
 
 const updateCanvas = () => {
   let canvas = getCanvas()
+
+  const global = getGlobal()
+
+  canvas.width = global.spaceWidth
+  canvas.height = global.spaceHeight
 
   const panel = getControlPanel()
   
