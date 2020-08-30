@@ -1,0 +1,47 @@
+html {
+  background-color: #000;
+  color: #fff;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+#drawing_space {
+  height: 100vh;
+  width: calc(100vw - 256px);
+}
+#control_panel {
+  width: 256px;
+  padding: 20px;
+}
+
+.property_header {
+  font-weight: bold;
+  padding: 15px;
+}
+
+#old_properties {
+  padding-bottom: 20px;
+}
+.old_input_data {
+  padding-bottom: 10px;
+  align-items: baseline;
+}
+
+#new_properties {
+  padding-bottom: 20px;
+}
+.new_input_data {
+  padding-bottom: 10px;
+}
+.control_input {
+  background-color: #000;
+  color: #fff;
+  border-color: #fff;
+  border-style: ridge;
+  width: 53px;
+  border-width: 1px;
+}

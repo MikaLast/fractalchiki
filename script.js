@@ -20,11 +20,15 @@ const mandelbrotIteration = (cx, cy, maxIter) => {
 }
 
 const mandelbrot = (canvas, xmin, xmax, ymin, ymax, iterations) => {
-  let width = canvas.width
-  let height = canvas.height
+  const global = getGlobal()
+  let width = global.spaceWidth
+  let height = global.spaceHeight
+
   let context = canvas.getContext('2d')
   let image = context.getImageData(0, 0, width, height)
   let pixels = image.data
+
+  const palitra = getPalitra()
 
   for (let ix = 0; ix < width; ++ix) {
     for (let iy = 0; iy < height; ++iy) {
@@ -34,39 +38,131 @@ const mandelbrot = (canvas, xmin, xmax, ymin, ymax, iterations) => {
       let pixels_position = 4 * (width * iy + ix)
 
       if (i > iterations) {
-        pixels[pixels_position] = 0
-        pixels[pixels_position + 1] = 0
-        pixels[pixels_position + 2] = 0
+        pixels[pixels_position] = palitra.center.red
+        pixels[pixels_position + 1] = palitra.center.green
+        pixels[pixels_position + 2] = palitra.center.blue
       } else {
         let color = 3 * Math.log(i) / Math.log(iterations - 1.0)
  
         if (color < 1) {
-          pixels[pixels_position] = 255 * color
-          pixels[pixels_position + 1] = 0
-          pixels[pixels_position + 2] = 0
-        } else if ( color < 2 ) {
-          pixels[pixels_position] = 255
-          pixels[pixels_position + 1] = 255 * (color - 1)
-          pixels[pixels_position + 2] = 0
+          pixels[pixels_position] = palitra.far.red * color
+          pixels[pixels_position + 1] = palitra.far.green
+          pixels[pixels_position + 2] = palitra.far.blue
+        } else if (color < 2) {
+          pixels[pixels_position] = palitra.middle.red
+          pixels[pixels_position + 1] = palitra.middle.green * (color - 1)
+          pixels[pixels_position + 2] = palitra.middle.blue
         } else {
-          pixels[pixels_position] = 255
-          pixels[pixels_position + 1] = 255
-          pixels[pixels_position + 2] = 255 * (color - 2)
+          pixels[pixels_position] = palitra.close.red
+          pixels[pixels_position + 1] = palitra.close.green
+          pixels[pixels_position + 2] = palitra.close.blue * (color - 2)
         }
       }
 
-      pixels[pixels_position + 3] = 255
+      pixels[pixels_position + 3] = palitra.transparency
     }
   }
 
   context.putImageData(image, 0, 0)
+
+  document.body.style.backgroundColor = palitra.panel
+  document.body.style.color = palitra.symbols
+
+  Array.from(document.getElementsByClassName('control_input')).map(cur => {
+    cur.style.backgroundColor = palitra.panel
+    cur.style.color = palitra.symbols
+    cur.style.borderColor = palitra.symbols
+  })
 }
 
 // ============= Helpers ============= //
 
+const getPalitra = (name = 'classic') => {
+  switch (name) {
+    case 'classic':
+      return {
+        far: {
+          red: 255,
+          green: 0,
+          blue: 0,
+        },
+        middle: {
+          red: 255,
+          green: 255,
+          blue: 0,
+        },
+        close: {
+          red: 255,
+          green: 255,
+          blue: 255,
+        },
+        center: {
+          red: 0,
+          green: 0,
+          blue: 0,
+        },
+        panel: '#940100',
+        symbols: '#ffff90',
+        transparency: 255,
+      }
+    case 'matrix':
+      return {
+        far: {
+          red: 0,
+          green: 0,
+          blue: 0,
+        },
+        middle: {
+          red: 0,
+          green: 255,
+          blue: 0,
+        },
+        close: {
+          red: 255,
+          green: 255,
+          blue: 255,
+        },
+        center: {
+          red: 0,
+          green: 0,
+          blue: 0,
+        },
+        panel: '#023500',
+        symbols: '#fffeb4',
+        transparency: 255,
+      }
+    case 'test':
+      return {
+        far: {
+          red: 211,
+          green: 192,
+          blue: 154,
+        },
+        middle: {
+          red: 219,
+          green: 227,
+          blue: 229,
+        },
+        close: {
+          red: 243,
+          green: 230,
+          blue: 227,
+        },
+        center: {
+          red: 119,
+          green: 109,
+          blue: 138,
+        },
+        panel: '#023500',
+        symbols: '#fffe92',
+        transparency: 255,
+      }
+  }
+}
+
 const getGlobal = () => {
-  const spaceWidth = window.innerWidth-50
-  const spaceHeight = window.innerHeight-50
+  const spaceWidth = document.getElementById('drawing_space').offsetWidth
+  const spaceHeight = document.getElementById('drawing_space').offsetHeight
   const magicKoefBrot = 2.1
   const windowKoef = spaceWidth > spaceHeight ? magicKoefBrot / spaceHeight : magicKoefBrot / spaceWidth
 
@@ -215,3 +311,5 @@ const updateCanvas = () => {
 // ============= Listener ============= //
 
 document.addEventListener('DOMContentLoaded', start)
+
+// ============= ============= ============= //
