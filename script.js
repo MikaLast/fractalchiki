@@ -54,7 +54,7 @@ const mandelbrot = (canvas, xmin, xmax, ymin, ymax, iterations) => {
           pixels[pixels_position + 2] = palitra.far.blue + (palitra.middle.blue - palitra.far.blue)* (color - 1) 
         } else {
           pixels[pixels_position] = palitra.middle.red + (palitra.close.red - palitra.middle.red) * (color - 2) 
-          pixels[pixels_position + 1] = palitra.middle.green + (palitra.close.blue - palitra.middle.blue) * (color - 2) 
+          pixels[pixels_position + 1] = palitra.middle.green + (palitra.close.green - palitra.middle.green) * (color - 2) 
           pixels[pixels_position + 2] = palitra.middle.blue + (palitra.close.blue - palitra.middle.blue) * (color - 2) 
         }
       }
@@ -82,19 +82,19 @@ const getPalitra = (name = 'classic') => {
     case 'classic':
       return {
         far: {
-          red: 255,//* color
+          red: 255,
           green: 0,
           blue: 0,
         },
         middle: {
           red: 255,
-          green: 255,// * (color - 1)
+          green: 255,
           blue: 0,
         },
         close: {
           red: 255,
           green: 255,
-          blue: 255,// * (color - 2)
+          blue: 255,
         },
         center: {
           red: 0,
@@ -108,19 +108,19 @@ const getPalitra = (name = 'classic') => {
     case 'matrix':
       return {
         far: {
-          red: 0,//* color
+          red: 0,
           green: 0,
           blue: 0,
         },
         middle: {
           red: 0,
-          green: 255,// * (color - 1)
+          green: 255,
           blue: 0,
         },
         close: {
           red: 255,
           green: 255,
-          blue: 255,// * (color - 2)
+          blue: 0,
         },
         center: {
           red: 0,
@@ -134,17 +134,17 @@ const getPalitra = (name = 'classic') => {
     case 'acva':
       return {
         far: {
-          red: 0, //* color
+          red: 0,
           green: 0,
           blue: 0,
         },
         middle: {
           red: 0,
-          green: 255,// * (color - 1)
-          blue: 255,// * (color - 1)
+          green: 255,
+          blue: 255,
         },
         close: {
-          red: 255, // * (color - 2)
+          red: 255,
           green: 255,
           blue: 255,
         },
