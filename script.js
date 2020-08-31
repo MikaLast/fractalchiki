@@ -28,7 +28,7 @@ const mandelbrot = (canvas, xmin, xmax, ymin, ymax, iterations) => {
   let image = context.getImageData(0, 0, width, height)
   let pixels = image.data
 
-  const palitra = getPalitra('t')
+  const palitra = getPalitra('acva')
 
   for (let ix = 0; ix < width; ++ix) {
     for (let iy = 0; iy < height; ++iy) {
@@ -153,8 +153,8 @@ const getPalitra = (name = 'classic') => {
           green: 0,
           blue: 0,
         },
-        panel: '#023500',
-        symbols: '#fffe92',
+        panel: '#046e6e',
+        symbols: '#ffffff',
         transparency: 255,
       }
       case 't':
