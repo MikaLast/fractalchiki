@@ -28,7 +28,7 @@ const mandelbrot = (canvas, xmin, xmax, ymin, ymax, iterations) => {
   let image = context.getImageData(0, 0, width, height)
   let pixels = image.data
 
-  const palitra = getPalitra()
+  const palitra = getPalitra('t')
 
   for (let ix = 0; ix < width; ++ix) {
     for (let iy = 0; iy < height; ++iy) {
@@ -46,16 +46,16 @@ const mandelbrot = (canvas, xmin, xmax, ymin, ymax, iterations) => {
  
         if (color < 1) {
           pixels[pixels_position] = palitra.far.red * color
-          pixels[pixels_position + 1] = palitra.far.green
-          pixels[pixels_position + 2] = palitra.far.blue
+          pixels[pixels_position + 1] = palitra.far.green * color
+          pixels[pixels_position + 2] = palitra.far.blue * color
         } else if (color < 2) {
-          pixels[pixels_position] = palitra.middle.red
-          pixels[pixels_position + 1] = palitra.middle.green * (color - 1)
-          pixels[pixels_position + 2] = palitra.middle.blue
+          pixels[pixels_position] = palitra.far.red + (palitra.middle.red - palitra.far.red) * (color - 1) 
+          pixels[pixels_position + 1] = palitra.far.green + (palitra.middle.green - palitra.far.green) * (color - 1) 
+          pixels[pixels_position + 2] = palitra.far.blue + (palitra.middle.blue - palitra.far.blue)* (color - 1) 
         } else {
-          pixels[pixels_position] = palitra.close.red
-          pixels[pixels_position + 1] = palitra.close.green
-          pixels[pixels_position + 2] = palitra.close.blue * (color - 2)
+          pixels[pixels_position] = palitra.middle.red + (palitra.close.red - palitra.middle.red) * (color - 2) 
+          pixels[pixels_position + 1] = palitra.middle.green + (palitra.close.blue - palitra.middle.blue) * (color - 2) 
+          pixels[pixels_position + 2] = palitra.middle.blue + (palitra.close.blue - palitra.middle.blue) * (color - 2) 
         }
       }
 
@@ -82,19 +82,19 @@ const getPalitra = (name = 'classic') => {
     case 'classic':
       return {
         far: {
-          red: 255,
+          red: 255,//* color
           green: 0,
           blue: 0,
         },
         middle: {
           red: 255,
-          green: 255,
+          green: 255,// * (color - 1)
           blue: 0,
         },
         close: {
           red: 255,
           green: 255,
-          blue: 255,
+          blue: 255,// * (color - 2)
         },
         center: {
           red: 0,
@@ -108,19 +108,19 @@ const getPalitra = (name = 'classic') => {
     case 'matrix':
       return {
         far: {
-          red: 0,
+          red: 0,//* color
           green: 0,
           blue: 0,
         },
         middle: {
           red: 0,
-          green: 255,
+          green: 255,// * (color - 1)
           blue: 0,
         },
         close: {
           red: 255,
           green: 255,
-          blue: 255,
+          blue: 255,// * (color - 2)
         },
         center: {
           red: 0,
@@ -131,32 +131,58 @@ const getPalitra = (name = 'classic') => {
         symbols: '#fffeb4',
         transparency: 255,
       }
-    case 'test':
+    case 'acva':
       return {
         far: {
-          red: 211,
-          green: 192,
-          blue: 154,
+          red: 0, //* color
+          green: 0,
+          blue: 0,
         },
         middle: {
-          red: 219,
-          green: 227,
-          blue: 229,
+          red: 0,
+          green: 255,// * (color - 1)
+          blue: 255,// * (color - 1)
         },
         close: {
-          red: 243,
-          green: 230,
-          blue: 227,
+          red: 255, // * (color - 2)
+          green: 255,
+          blue: 255,
         },
         center: {
-          red: 119,
-          green: 109,
-          blue: 138,
+          red: 0,
+          green: 0,
+          blue: 0,
         },
         panel: '#023500',
         symbols: '#fffe92',
         transparency: 255,
       }
+      case 't':
+        return {
+          far: {
+            red: 22,
+            green: 26,
+            blue: 46,
+          },
+          middle: {
+            red: 22,
+            green: 33,
+            blue: 62,
+          },
+          close: {
+            red: 22,
+            green: 52,
+            blue: 96,
+          },
+          center: {
+            red: 233,
+            green: 69,
+            blue: 96,
+          },
+          panel: '#023500',
+          symbols: '#fffeb4',
+          transparency: 255,
+        }  
   }
 }
 
