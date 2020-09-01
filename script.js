@@ -21,14 +21,14 @@ const mandelbrotIteration = (cx, cy, maxIter) => {
 
 const mandelbrot = (canvas, xmin, xmax, ymin, ymax, iterations) => {
   const global = getGlobal()
-  let width = global.spaceWidth
-  let height = global.spaceHeight
+  let width = canvas.width
+  let height = canvas.height
 
   let context = canvas.getContext('2d')
   let image = context.getImageData(0, 0, width, height)
   let pixels = image.data
 
-  const palitra = getPalitra('acva')
+  const palitra = getColors()
 
   for (let ix = 0; ix < width; ++ix) {
     for (let iy = 0; iy < height; ++iy) {
@@ -51,7 +51,7 @@ const mandelbrot = (canvas, xmin, xmax, ymin, ymax, iterations) => {
         } else if (color < 2) {
           pixels[pixels_position] = palitra.far.red + (palitra.middle.red - palitra.far.red) * (color - 1) 
           pixels[pixels_position + 1] = palitra.far.green + (palitra.middle.green - palitra.far.green) * (color - 1) 
-          pixels[pixels_position + 2] = palitra.far.blue + (palitra.middle.blue - palitra.far.blue)* (color - 1) 
+          pixels[pixels_position + 2] = palitra.far.blue + (palitra.middle.blue - palitra.far.blue) * (color - 1) 
         } else {
           pixels[pixels_position] = palitra.middle.red + (palitra.close.red - palitra.middle.red) * (color - 2) 
           pixels[pixels_position + 1] = palitra.middle.green + (palitra.close.green - palitra.middle.green) * (color - 2) 
@@ -59,7 +59,7 @@ const mandelbrot = (canvas, xmin, xmax, ymin, ymax, iterations) => {
         }
       }
 
-      pixels[pixels_position + 3] = palitra.transparency
+      pixels[pixels_position + 3] = 255
     }
   }
 
@@ -73,117 +73,51 @@ const mandelbrot = (canvas, xmin, xmax, ymin, ymax, iterations) => {
     cur.style.color = palitra.symbols
     cur.style.borderColor = palitra.symbols
   })
+  Array.from(document.getElementsByClassName('color_input')).map(cur => {
+    cur.style.backgroundColor = palitra.panel
+  })
 }
 
 // ============= Helpers ============= //
 
-const getPalitra = (name = 'classic') => {
-  switch (name) {
-    case 'classic':
-      return {
-        far: {
-          red: 255,
-          green: 0,
-          blue: 0,
-        },
-        middle: {
-          red: 255,
-          green: 255,
-          blue: 0,
-        },
-        close: {
-          red: 255,
-          green: 255,
-          blue: 255,
-        },
-        center: {
-          red: 0,
-          green: 0,
-          blue: 0,
-        },
-        panel: '#940100',
-        symbols: '#ffff90',
-        transparency: 255,
-      }
-    case 'matrix':
-      return {
-        far: {
-          red: 0,
-          green: 0,
-          blue: 0,
-        },
-        middle: {
-          red: 0,
-          green: 255,
-          blue: 0,
-        },
-        close: {
-          red: 255,
-          green: 255,
-          blue: 0,
-        },
-        center: {
-          red: 0,
-          green: 0,
-          blue: 0,
-        },
-        panel: '#023500',
-        symbols: '#fffeb4',
-        transparency: 255,
-      }
-    case 'acva':
-      return {
-        far: {
-          red: 0,
-          green: 0,
-          blue: 0,
-        },
-        middle: {
-          red: 0,
-          green: 255,
-          blue: 255,
-        },
-        close: {
-          red: 255,
-          green: 255,
-          blue: 255,
-        },
-        center: {
-          red: 0,
-          green: 0,
-          blue: 0,
-        },
-        panel: '#046e6e',
-        symbols: '#ffffff',
-        transparency: 255,
-      }
-      case 't':
-        return {
-          far: {
-            red: 22,
-            green: 26,
-            blue: 46,
-          },
-          middle: {
-            red: 22,
-            green: 33,
-            blue: 62,
-          },
-          close: {
-            red: 22,
-            green: 52,
-            blue: 96,
-          },
-          center: {
-            red: 233,
-            green: 69,
-            blue: 96,
-          },
-          panel: '#023500',
-          symbols: '#fffeb4',
-          transparency: 255,
-        }  
+const getPalitras = () => {
+  return fetch(`sources/palitras.json`).then(res => res.json())
+}
+
+function hexToRgb(hex) {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    red: parseInt(result[1], 16),
+    green: parseInt(result[2], 16),
+    blue: parseInt(result[3], 16)
+  } : null;
+}
+
+const getColors = () => {
+  const center = document.getElementById('color_center').value
+  const close = document.getElementById('color_close').value
+  const middle = document.getElementById('color_middle').value
+  const far = document.getElementById('color_far').value
+  const panel = document.getElementById('color_panel').value
+  const symbols = document.getElementById('color_symbols').value
+
+  return {
+    center: hexToRgb(center),
+    close: hexToRgb(close),
+    middle: hexToRgb(middle),
+    far: hexToRgb(far),
+    panel,
+    symbols,
   }
+}
+
+const setPalitra = (palitra) => {
+  document.getElementById('color_center').value = palitra.center
+  document.getElementById('color_close').value = palitra.close
+  document.getElementById('color_middle').value = palitra.middle
+  document.getElementById('color_far').value = palitra.far
+  document.getElementById('color_panel').value = palitra.panel
+  document.getElementById('color_symbols').value = palitra.symbols
 }
 
 const getGlobal = () => {
@@ -304,13 +238,18 @@ const downloadCanvas = () => {
   link.click()
 }
 
-const start = () => {
+const start = async () => {
   canvas = createCanvas()
 
   const panel = getControlPanel()
   
   fillInputs(panel.standart.centerXPercent, panel.standart.centerYPercent, panel.standart.iterations, panel.standart.scale)
   fillOlds(panel.standart.centerXPercent, panel.standart.centerYPercent, panel.standart.iterations, panel.standart.scale)
+
+  const palitras = await getPalitras()
+  setPalitra(palitras[0])
+  document.getElementById('themes').innerHTML = 
+    palitras.map(theme => `<button onclick="setPalitra(${JSON.stringify(theme).split('"').join("'")})">${theme.name}</button>`).join('\n')
 
   const square = calculateSquare(panel.standart.centerXPercent, panel.standart.centerYPercent, panel.standart.scale)
 

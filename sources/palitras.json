@@ -1,0 +1,29 @@
+[
+  {
+    "name": "Классическая",
+    "far": "#ff0000",
+    "middle": "#ffff00",
+    "close": "#ffffff",
+    "center": "#000000",
+    "panel": "#940000",
+    "symbols": "#ffff00"
+  },
+  {
+    "name": "Аква",
+    "far": "#000000",
+    "middle": "#00ffff",
+    "close": "#ffffff",
+    "center": "#000000",
+    "panel": "#046e6e",
+    "symbols": "#ffffff"
+  },
+  {
+    "name": "Матрица",
+    "far": "#000000",
+    "middle": "#00ff00",
+    "close": "#ffff00",
+    "center": "#000000",
+    "panel": "#023500",
+    "symbols": "#fffeb4"
+  }
+]

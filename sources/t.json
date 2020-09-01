@@ -1,0 +1,28 @@
+//       case 't':
+//         return {
+//           far: {
+//             red: 22,
+//             green: 26,
+//             blue: 46,
+//           },
+//           middle: {
+//             red: 22,
+//             green: 33,
+//             blue: 62,
+//           },
+//           close: {
+//             red: 22,
+//             green: 52,
+//             blue: 96,
+//           },
+//           center: {
+//             red: 233,
+//             green: 69,
+//             blue: 96,
+//           },
+//           panel: '#023500',
+//           symbols: '#fffeb4',
+//           transparency: 255,
+//         }  
+//   }
+// }
