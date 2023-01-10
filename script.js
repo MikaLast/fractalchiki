@@ -43,19 +43,19 @@ const mandelbrot = (canvas, xmin, xmax, ymin, ymax, iterations) => {
         pixels[pixels_position + 2] = palitra.center.blue
       } else {
         let color = 3 * Math.log(i) / Math.log(iterations - 1.0)
- 
+
         if (color < 1) {
           pixels[pixels_position] = palitra.far.red * color
           pixels[pixels_position + 1] = palitra.far.green * color
           pixels[pixels_position + 2] = palitra.far.blue * color
         } else if (color < 2) {
-          pixels[pixels_position] = palitra.far.red + (palitra.middle.red - palitra.far.red) * (color - 1) 
-          pixels[pixels_position + 1] = palitra.far.green + (palitra.middle.green - palitra.far.green) * (color - 1) 
-          pixels[pixels_position + 2] = palitra.far.blue + (palitra.middle.blue - palitra.far.blue) * (color - 1) 
+          pixels[pixels_position] = palitra.far.red + (palitra.middle.red - palitra.far.red) * (color - 1)
+          pixels[pixels_position + 1] = palitra.far.green + (palitra.middle.green - palitra.far.green) * (color - 1)
+          pixels[pixels_position + 2] = palitra.far.blue + (palitra.middle.blue - palitra.far.blue) * (color - 1)
         } else {
-          pixels[pixels_position] = palitra.middle.red + (palitra.close.red - palitra.middle.red) * (color - 2) 
-          pixels[pixels_position + 1] = palitra.middle.green + (palitra.close.green - palitra.middle.green) * (color - 2) 
-          pixels[pixels_position + 2] = palitra.middle.blue + (palitra.close.blue - palitra.middle.blue) * (color - 2) 
+          pixels[pixels_position] = palitra.middle.red + (palitra.close.red - palitra.middle.red) * (color - 2)
+          pixels[pixels_position + 1] = palitra.middle.green + (palitra.close.green - palitra.middle.green) * (color - 2)
+          pixels[pixels_position + 2] = palitra.middle.blue + (palitra.close.blue - palitra.middle.blue) * (color - 2)
         }
       }
 
@@ -84,7 +84,7 @@ const getPalitras = () => {
   return fetch(`sources/palitras.json`).then(res => res.json())
 }
 
-function hexToRgb(hex) {
+const hexToRgb = (hex) => {
   var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result ? {
     red: parseInt(result[1], 16),
@@ -156,10 +156,10 @@ const getCanvas = () => {
 const createCanvas = () => {
   const global = getGlobal()
 
-  let canvas = document.createElement('canvas')
+  const canvas = document.createElement('canvas')
   canvas.width = global.spaceWidth
   canvas.height = global.spaceHeight
-  let node = document.getElementById('drawing_space')
+  const node = document.getElementById('drawing_space')
   node.appendChild(canvas)
   return canvas
 }
@@ -227,11 +227,11 @@ const downloadCanvas = () => {
   let link = document.createElement('a')
 
   let name = [`mandelbrot`]
-  name.push(`${Math.round(panel.old.centerXPercent*100)/100}`)
-  name.push(`${Math.round(panel.old.centerYPercent*100)/100}`)
+  name.push(`${Math.round(panel.old.centerXPercent * 100) / 100}`)
+  name.push(`${Math.round(panel.old.centerYPercent * 100) / 100}`)
   name.push(`${Math.round(panel.old.iterations)}`)
   name.push(`${Math.round(panel.old.scale)}`)
-  
+
   link.download = name.join('_') + `.png`
 
   link.href = canvas.toDataURL()
@@ -239,16 +239,17 @@ const downloadCanvas = () => {
 }
 
 const start = async () => {
-  canvas = createCanvas()
+  const canvas = createCanvas()
+  canvas.addEventListener('click', setPoint)
 
   const panel = getControlPanel()
-  
+
   fillInputs(panel.standart.centerXPercent, panel.standart.centerYPercent, panel.standart.iterations, panel.standart.scale)
   fillOlds(panel.standart.centerXPercent, panel.standart.centerYPercent, panel.standart.iterations, panel.standart.scale)
 
   const palitras = await getPalitras()
   setPalitra(palitras[0])
-  document.getElementById('themes').innerHTML = 
+  document.getElementById('themes').innerHTML =
     palitras.map(theme => `<button onclick="setPalitra(${JSON.stringify(theme).split('"').join("'")})">${theme.name}</button>`).join('\n')
 
   const square = calculateSquare(panel.standart.centerXPercent, panel.standart.centerYPercent, panel.standart.scale)
@@ -257,7 +258,7 @@ const start = async () => {
 }
 
 const updateCanvas = () => {
-  let canvas = getCanvas()
+  const canvas = getCanvas()
 
   const global = getGlobal()
 
@@ -265,12 +266,34 @@ const updateCanvas = () => {
   canvas.height = global.spaceHeight
 
   const panel = getControlPanel()
-  
+
   fillOlds(panel.new.centerXPercent, panel.new.centerYPercent, panel.new.iterations, panel.new.scale)
 
   const square = calculateSquare(panel.new.centerXPercent, panel.new.centerYPercent, panel.new.scale)
 
   mandelbrot(canvas, square.left, square.right, square.down, square.up, panel.new.iterations)
+}
+
+const setPoint = (event) => {
+  if (!document.getElementById('input_point_onclick').checked) return
+
+  const canvas = getCanvas()
+  const rect = canvas.getBoundingClientRect()
+  const x = (event.clientX - rect.left) / rect.width
+  const y = (event.clientY - rect.top) / rect.height
+
+  const panel = getControlPanel()
+
+  const min = rect.width > rect.height ? rect.height : rect.width
+  const heightPercent = 100 * (rect.height / min) / panel.old.scale
+  const widthPercent = 100 * (rect.width / min) / panel.old.scale
+
+  fillInputs(
+    +panel.old.centerXPercent + (x - 0.5) * widthPercent,
+    +panel.old.centerYPercent + (y - 0.5) * heightPercent,
+    panel.new.iterations,
+    panel.new.scale
+  )
 }
 
 // ============= Listener ============= //

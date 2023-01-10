@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Фракталы и их глубины</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
@@ -11,62 +11,37 @@
     <div id="control_panel">
       <div id="old_properties">
         <div class="property_header">Текущие данные:</div>
-        <div class="old_input_data">
-          Сдвиг X: <a id="old_x" class="control_value"></a>
-        </div>
-        <div class="old_input_data">
-          Сдвиг Y: <a id="old_y" class="control_value"></a>
-        </div>
-        <div class="old_input_data">
-          Масштаб: <a id="old_s" class="control_value"></a>
-        </div>
-        <div class="old_input_data">
-          Резкость: <a id="old_i" class="control_value"></a>
-        </div>
+        <div class="old_input_data">Сдвиг X: <a id="old_x" class="control_value"></a></div>
+        <div class="old_input_data">Сдвиг Y: <a id="old_y" class="control_value"></a></div>
+        <div class="old_input_data">Масштаб: <a id="old_s" class="control_value"></a></div>
+        <div class="old_input_data">Резкость: <a id="old_i" class="control_value"></a></div>
       </div>
       <div id="new_properties">
         <div class="property_header">Новые данные:</div>
-        <div class="new_input_data">
-          Сдвиг X: <input id="input_x" class="control_input">
-        </div>
-        <div class="new_input_data">
-          Сдвиг Y: <input id="input_y" class="control_input">
-        </div>
-        <div class="new_input_data">
-          Масштаб: <input id="input_s" class="control_input">
-        </div>
-        <div class="new_input_data">
-          Резкость: <input id="input_i" class="control_input">
-        </div>
+        <div class="new_input_data">Сдвиг X: <input id="input_x" class="control_input" /></div>
+        <div class="new_input_data">Сдвиг Y: <input id="input_y" class="control_input" /></div>
+        <div class="new_input_data">Масштаб: <input id="input_s" class="control_input" /></div>
+        <div class="new_input_data">Резкость: <input id="input_i" class="control_input" /></div>
       </div>
       <div id="colors">
         <div class="property_header">Цветовая гамма:</div>
-        <div class="color_input_data">
-          Центр: <input type="color" id="color_center" class="color_input">
-        </div>
-        <div class="color_input_data">
-          Близкое окружение: <input type="color" id="color_close" class="color_input">
-        </div>
-        <div class="color_input_data">
-          Среднее окружение: <input type="color" id="color_middle" class="color_input">
-        </div>
-        <div class="color_input_data">
-          Дальнее окружение: <input type="color" id="color_far" class="color_input">
-        </div>
-        <div class="color_input_data">
-          Панель: <input type="color" id="color_panel" class="color_input">
-        </div>
-        <div class="color_input_data">
-          Текст: <input type="color" id="color_symbols" class="color_input">
-        </div>
+        <div class="color_input_data">Центр: <input type="color" id="color_center" class="color_input" /></div>
+        <div class="color_input_data">Близкое окружение: <input type="color" id="color_close" class="color_input" /></div>
+        <div class="color_input_data">Среднее окружение: <input type="color" id="color_middle" class="color_input" /></div>
+        <div class="color_input_data">Дальнее окружение: <input type="color" id="color_far" class="color_input" /></div>
+        <div class="color_input_data">Панель: <input type="color" id="color_panel" class="color_input" /></div>
+        <div class="color_input_data">Текст: <input type="color" id="color_symbols" class="color_input" /></div>
       </div>
       <div id="themes"></div>
+
+      <div class="new_input_data"><input id="input_point_onclick" type="checkbox" checked /> Выбирать точку по клику</div>
+
       <div id="control_buttons">
         <button onclick="updateCanvas()">Перерасчитать</button>
         <button onclick="downloadCanvas()">Скачать</button>
       </div>
     </div>
-    
+
     <script src="script.js"></script>
   </body>
 </html>
